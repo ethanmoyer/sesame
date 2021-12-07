@@ -440,8 +440,7 @@ testEnrichmentGene = function(querySet, databaseSets=NA, platform=NA, verbose=FA
 #'
 #' @return A DataFrame with the estimate/statistic, p-value, and name of test
 #' for the given results.
-testEnrichmentFisher = function(querySet, databaseSet, universeSet) {
-    test = "fisher"
+testEnrichmentFisher = function(querySet, databaseSet, universeSet, test='fisher') {
     if (length(intersect(querySet, databaseSet)) == 0) {
         return(data.frame(estimate=0,
                         p.value=1,
@@ -462,7 +461,20 @@ testEnrichmentFisher = function(querySet, databaseSet, universeSet) {
             querySet = c("Q_in","Q_out"),
             databaseSet = c("D_in","D_out")))
     
-    res = fisher.test(mtx) #, alternative = 'greater'
+    if (test == 'fisher') {
+        #res = fisher.test(mtx, alternative = 'greater')
+        res = fisher.test(mtx)
+    } else if (test == '') {
+        res = chisq.test(mtx, alternative = 'greater')
+    } else {
+        return(data.frame(estimate=0,
+                          p.value=1,
+                          test=test,
+                          nQ=length(querySet),
+                          nD = length(databaseSet),
+                          overlap=0
+        ))
+    }
     
     result = data.frame(
         estimate = calcFoldChange(mtx),
@@ -474,6 +486,7 @@ testEnrichmentFisher = function(querySet, databaseSet, universeSet) {
     )
     return(result)
 }
+
 
 calcFoldChange = function(mtx){
     num = mtx[1, 1] / (mtx[1, 1] + mtx[1, 2])
