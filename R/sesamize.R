@@ -37,7 +37,7 @@ sesamize <- function(
 
     if (is.null(HDF5)) {
         ## are we working on an HDF5-backed RGChannelSet?
-        HDF5 <- (class(assays(rgSet)[[1]])[1] == "DelayedMatrix")
+        HDF5 <- is(assays(rgSet)[[1]], "DelayedMatrix")
     }
     t1 = bptry(bplapply(samples, function(sample) {
         message("Sesamizing ", sample, "...")
@@ -148,6 +148,10 @@ SigDFToRGChannel <- function(sdf, manifest = NULL, controls = NULL) {
 
 ## annotation, if not given is guessed
 guessMinfiAnnotation <- function(ptf, annotation = NA) {
+    if (ptf == "MM285") {
+        ## 20211109: still waiting for the BioC official code
+        stop("SigDFsToRGChannelSet does not support mouse array.")
+    }
     if (is.na(annotation)) {
         if (ptf %in% c("HM450", "HM27")) {
             'ilmn12.hg19'
@@ -160,6 +164,8 @@ guessMinfiAnnotation <- function(ptf, annotation = NA) {
 }
 
 #' Convert sesame::SigDF to minfi::RGChannelSet
+#'
+#' This function does not support the mouse array.
 #' 
 #' @param sdfs a list of sesame::SigDF
 #' @param BPPARAM get parallel with MulticoreParam(n)

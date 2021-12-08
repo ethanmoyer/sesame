@@ -645,7 +645,7 @@ calcDatabaseSetStatistics1 = function(x) {
 #' 
 #' @export
 calcDatabaseSetStatisticsAll = function(betas, databaseSets) {
-    a = do.call(cbind, 
+    statistics = do.call(cbind, 
                 lapply(names(databaseSets),
                     function(databaseSetName) {
                         databaseSet = databaseSets[[databaseSetName]]
@@ -656,18 +656,21 @@ calcDatabaseSetStatisticsAll = function(betas, databaseSets) {
                             probes = databaseSet
                         }
                            
-                        statistics = suppressWarnings(
-                            calcDatabaseSetStatistics1(
-                                betas[na.omit(match(probes, rownames(betas))), ]))
+                        statistics = calcDatabaseSetStatistics1(
+                                betas[na.omit(match(probes, 
+                                                    rownames(betas))), ])
                         names(statistics) = unlist(lapply(names(statistics), 
                             function(colname) {
                                 paste(databaseSetName, colname, sep="-")
                             }))
                             return(statistics)
                         }))
-    b = a[, !grepl("FALSE", colnames(a))]
-    c = b[, !apply(b, 2, function(x) {any(is.na(x) | is.infinite(x))})]
-    return(c)
+    statistics = statistics[, !grepl("FALSE", colnames(statistics))]
+    statistics = statistics[, !apply(statistics, 2, 
+                                     function(x) {
+                                         any(is.na(x) | is.infinite(x))
+                                         })]
+    return(statistics)
 }
 
 skew = function (x, na.rm = FALSE) {

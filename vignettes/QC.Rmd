@@ -16,6 +16,7 @@ vignette: >
 ```{r echo=FALSE, message=FALSE}
 options(rmarkdown.html_vignette.check_title = FALSE)
 library(sesame)
+sesameDataCacheAll()
 ```
 
 Sesame provide convenient function to compare your sample with
@@ -32,7 +33,7 @@ SeSAMe provides a set of quality control steps.
 Be sure to pre-cache HM450 annotation data from ExperimentHub.
 This only needs to be done once per sesame installation.
 ```{r message = FALSE}
-sdfs = sesameDataGet("EPIC.5.SigDFs.normal")
+sdfs = sesameDataGet("EPIC.5.SigDF.normal")
 ```
 
 The SeSAMe QC function returns an `sesameQC` object which can be

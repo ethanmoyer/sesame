@@ -35,7 +35,7 @@ BiocManager::install('zwdzwd/sesame')
 **CRITICAL:** After a new installation, one needs to cache the associated
 annotation data using the following command.
 This needs to be done only once per SeSAMe installation.
-```{r eval=FALSE}
+```{r}
 sesameDataCacheAll()
 ```
 This function caches the needed SeSAMe annotation for all the supported
@@ -402,13 +402,13 @@ complies with Bioconductor guidelines, and for backwards compatibility,
 ways. One can sesamize a minfi `RGChannelSet` which returns a `GenomicRatioSet`.
 Here we are illustrating using the `FlowSorted.Blood.450k` object, which is 
 distributed in the `minfi::RGChannelSet`.
-```{r message = FALSE}
+```{r message=FALSE, eval=FALSE}
 library(sesame)
 library(FlowSorted.Blood.450k)
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
-```{r}
+```{r eval=FALSE}
 grSet <- sesamize(FlowSorted.Blood.450k[,1:4])
 grSet
 ```
