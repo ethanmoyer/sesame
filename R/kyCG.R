@@ -641,7 +641,7 @@ calcDatabaseSetStatistics1 = function(x) {
 #' 
 calcDatabaseSetStatisticsAll = function(betas, databaseSets) {
     statistics = do.call(cbind, 
-        lapply(names(databaseSets),
+        lapply(names(databaseSets)[20:30],
             function(databaseSetName) {
                 databaseSet = databaseSets[[databaseSetName]]
                 if (length(databaseSet) >= nrow(betas)) return(FALSE)
@@ -651,9 +651,10 @@ calcDatabaseSetStatisticsAll = function(betas, databaseSets) {
                     probes = databaseSet
                 }
                 
+                if (!any(rownames(betas) %in% probes)) return(FALSE)
+                
                 statistics = calcDatabaseSetStatistics1(
-                    betas[na.omit(match(probes, 
-                        rownames(betas))), ])
+                    betas[rownames(betas) %in% probes, ])
                 names(statistics) = unlist(lapply(names(statistics), 
                     function(colname) {
                         paste(databaseSetName, colname, sep="-")
